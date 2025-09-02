@@ -1,0 +1,35 @@
+# Node modules
+node_modules/
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# dotenv environment variables
+.env
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Optional npm cache
+.npm
+
+# Optional REPL history
+.node_repl_history
+
+# Editor directories and files
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Build output (if you ever build frontend or transpile)
+dist/
+build/
+
+# GitHub credentials / tokens backup (never commit credentials)
+credentials.json
