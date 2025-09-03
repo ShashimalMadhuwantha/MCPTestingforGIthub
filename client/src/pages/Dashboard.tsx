@@ -23,7 +23,7 @@ export default function Dashboard() {
     const saved =
       (localStorage.getItem("theme") as "light" | "dark" | null) ||
       (window.matchMedia?.("(prefers-color-scheme: dark)").matches ? "dark" : "light");
-    setTheme(saved);
+    setTheme(saved || "light");
   }, []);
 
   useEffect(() => {
@@ -95,7 +95,8 @@ export default function Dashboard() {
               <span className="gradient-text"> {PROJECT_NAME}</span>
             </h1>
             <p className="sub">
-              AI‑powered GitHub insights for Pull Requests, Issues, and Commits—instantly.
+              AI‑powered insights for Pull Requests, Issues, and Commits—diff‑aware summaries,
+              risks, and next steps, across repos and owners.
             </p>
             <div className="cta">
               <button className="btn primary lg" onClick={connectGitHub}>
@@ -105,6 +106,22 @@ export default function Dashboard() {
                 Connect with GitHub
               </button>
               <a className="btn ghost lg" href="#features">Explore features</a>
+            </div>
+
+            {/* Stats strip */}
+            <div className="stats">
+              <div className="stat">
+                <div className="stat-k">1,248</div>
+                <div className="stat-l">Summaries generated</div>
+              </div>
+              <div className="stat">
+                <div className="stat-k">312</div>
+                <div className="stat-l">Repositories synced</div>
+              </div>
+              <div className="stat">
+                <div className="stat-k">~3s</div>
+                <div className="stat-l">Avg summary time</div>
+              </div>
             </div>
           </div>
 
@@ -119,22 +136,64 @@ export default function Dashboard() {
         </div>
       </section>
 
-      {/* Features */}
+      {/* What we offer */}
       <section id="features" className="section">
         <div className="container">
-          <h2 className="section-title">What you get</h2>
-          <div className="grid">
+          <h2 className="section-title">What we offer</h2>
+
+ 
+          <div className="grid feature-grid">
             <FeatureCard
+              icon={<PRIcon />}
               title="PR Summaries"
-              desc="Understand PR purpose, scope, and risks at a glance across repos."
+              desc="Understand intent and impact of changes—before opening the diff."
+              badges={["Diff-aware", "Risk hotspots", "Review-ready"]}
+              points={[
+                "Purpose, scope, and affected areas per PR",
+                "Highlights of potential breaking changes and risks",
+                "Auto-generated review checklist to speed approvals",
+                "Cross‑repo mentions and linked issues surfaced",
+              ]}
+              tone="blue"
             />
             <FeatureCard
+              icon={<IssueIcon />}
               title="Issue Insights"
-              desc="Spot themes, blockers, and suggested next steps automatically."
+              desc="Make triage effortless with context and actionable next steps."
+              badges={["Themes", "Duplicates", "Next steps"]}
+              points={[
+                "Thematic clustering: see trending topics and blockers",
+                "Duplicate detection hints for quicker deduping",
+                "Suggested next steps based on labels and history",
+                "Owner‑wide open issues rollups and summaries",
+              ]}
+              tone="violet"
             />
             <FeatureCard
+              icon={<CommitIcon />}
               title="Commit Digests"
-              desc="Concise daily summaries of changes and areas impacted."
+              desc="Digest daily activity by area, author, and impact."
+              badges={["Daily", "Release‑ready", "People-aware"]}
+              points={[
+                "Daily grouped digests with impacted files and modules",
+                "Author highlights and activity distribution",
+                "Release‑notes‑ready one‑pager summaries",
+                "Date‑scoped summaries for sprint or deploy windows",
+              ]}
+              tone="amber"
+            />
+            <FeatureCard
+              icon={<ExploreIcon />}
+              title="Repository Explorer"
+              desc="Filter, explore, and compare across your GitHub footprint."
+              badges={["Owner‑wide", "Filters", "Saved views"]}
+              points={[
+                "Owner‑wide rollups with per‑repo open issues",
+                "Language, stars, and label filters for fast discovery",
+                "Consistent card design with attribute chips",
+                "Launch into PRs, Issues, and Commits in one click",
+              ]}
+              tone="cyan"
             />
           </div>
         </div>
@@ -146,7 +205,7 @@ export default function Dashboard() {
           <h2 className="section-title">How it works</h2>
           <ol className="steps">
             <li><span className="step-no">1</span> Connect your GitHub account.</li>
-            <li><span className="step-no">2</span> We fetch PRs, Issues, and Commits (with your permission).</li>
+            <li><span className="step-no">2</span> We fetch PRs, Issues, and Commits you can access.</li>
             <li><span className="step-no">3</span> Our AI summarizes and surfaces what matters.</li>
           </ol>
         </div>
@@ -156,7 +215,7 @@ export default function Dashboard() {
       <section id="ai" className="section">
         <div className="container">
           <h2 className="section-title">AI preview</h2>
-          <div className="preview">
+          <div className="preview ai-preview">
             <div className="preview-header">
               <GitHubMark size={18} />
               <span>AI Summary</span>
@@ -193,15 +252,50 @@ export default function Dashboard() {
     </div>
   );
 }
-
-function FeatureCard({ title, desc }: { title: string; desc: string }) {
+function FeatureCard({
+  icon,
+  title,
+  desc,
+  badges = [],
+  points = [],
+  tone = "blue",
+}: {
+  icon?: React.ReactNode;
+  title: string;
+  desc: string;
+  badges?: string[];
+  points?: string[];
+  tone?: "blue" | "violet" | "amber" | "cyan";
+}) {
   return (
-    <div className="card hover">
-      <h3>{title}</h3>
-      <p>{desc}</p>
+    <div className="card hover feature-card feature-hero" data-tone={tone}>
+      <div className="feature-hero-head">
+        <div className="feature-icon">{icon}</div>
+        <div className="feature-head-text">
+          <h3 className="feature-title">{title}</h3>
+          <p className="feature-desc">{desc}</p>
+        </div>
+      </div>
+
+      {badges.length > 0 && (
+        <div className="badges">
+          {badges.map((b) => (
+            <span key={b} className="badge">{b}</span>
+          ))}
+        </div>
+      )}
+
+      {points.length > 0 && (
+        <ul className="check-list">
+          {points.map((p, i) => (
+            <li key={i}><span className="check">✓</span>{p}</li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 }
+// ...existing code...
 
 function GitHubMark({ size = 22 }: { size?: number }) {
   return (
@@ -216,6 +310,36 @@ function GitHubMark({ size = 22 }: { size?: number }) {
       0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82
       .44 1.1.16 1.91.08 2.11.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.74.54 1.49
       0 1.07-.01 1.93-.01 2.19 0 .21.15.46.55.38A8 8 0 0 0 16 8c0-4.42-3.58-8-8-8z"/>
+    </svg>
+  );
+}
+
+/* Simple inline icons to match feature cards */
+function PRIcon() {
+  return (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <path d="M7 3a2 2 0 0 0-2 2v8.28A2 2 0 1 0 7 15V9h6a3 3 0 0 1 3 3v1.28A2 2 0 1 0 18 15V12a5 5 0 0 0-5-5H7V5a2 2 0 0 0-2-2z"/>
+    </svg>
+  );
+}
+function IssueIcon() {
+  return (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <path d="M11 7h2v6h-2V7zm0 8h2v2h-2v-2z"/><path d="M12 2a10 10 0 1 0 .001 20.001A10 10 0 0 0 12 2z"/>
+    </svg>
+  );
+}
+function CommitIcon() {
+  return (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <path d="M7 12a5 5 0 0 1 10 0 5 5 0 0 1-10 0zm-5 1h4a7 7 0 0 0 12 0h4v-2h-4a7 7 0 0 0-12 0H2v2z"/>
+    </svg>
+  );
+}
+function ExploreIcon() {
+  return (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <path d="M12 2 2 7l10 5 10-5-10-5zm0 7.18L5.09 6.5 12 3.82 18.91 6.5 12 9.18zM2 17l10 5 10-5v-7l-10 5-10-5v7z"/>
     </svg>
   );
 }
