@@ -5,23 +5,76 @@
   --ring-2: color-mix(in oklab, var(--brand-2) 60%, transparent);
   --card-grad: linear-gradient(180deg, color-mix(in oklab, var(--card) 94%, transparent), transparent);
   --card-border: color-mix(in oklab, var(--border) 80%, transparent);
+
+  /* Subtle glows */
+  --glow-a: color-mix(in oklab, var(--brand) 22%, transparent);
+  --glow-b: color-mix(in oklab, var(--brand-2) 22%, transparent);
 }
 
-/* Card polish */
+/* Card polish with gradient border and hover glow */
 .card {
   position: relative;
-  background: var(--card);
-  border: 1px solid var(--card-border);
+  background: linear-gradient(var(--card), var(--card)) padding-box,
+              radial-gradient(140% 120% at 0% 0%, color-mix(in oklab, var(--brand) 10%, transparent), transparent 60%) border-box;
+  border: 1px solid transparent;
   border-radius: 14px;
   box-shadow: 0 8px 24px color-mix(in oklab, var(--shadow, rgba(0,0,0,0.2)) 26%, transparent);
   backdrop-filter: saturate(1.02) blur(2px);
-  transition: transform 160ms ease, box-shadow 200ms ease, border-color 160ms ease;
+  transition: transform 160ms ease, box-shadow 220ms ease, border-color 160ms ease, background 220ms ease;
 }
 .card.hover:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 12px 26px color-mix(in oklab, var(--shadow, rgba(0,0,0,0.2)) 36%, transparent);
-  border-color: color-mix(in oklab, var(--border) 60%, var(--brand) 10%);
+  transform: translateY(-2px);
+  box-shadow:
+    0 14px 32px color-mix(in oklab, var(--shadow, rgba(0,0,0,0.2)) 40%, transparent),
+    0 0 0 1px color-mix(in oklab, var(--brand) 18%, transparent) inset;
 }
+
+/* Animated border accent on repo cards */
+.repo-card {
+  background:
+    linear-gradient(var(--card), var(--card)) padding-box,
+    conic-gradient(from 180deg at 50% 50%, color-mix(in oklab, var(--brand) 14%, transparent), color-mix(in oklab, var(--brand-2) 14%, transparent), color-mix(in oklab, var(--brand) 14%, transparent)) border-box;
+  border: 1px solid transparent;
+}
+.repo-card::before {
+  content: "";
+  position: absolute; inset: -1px;
+  border-radius: inherit;
+  background: conic-gradient(from var(--angle, 0deg), var(--glow-a), var(--glow-b), var(--glow-a));
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  padding: 1px;
+  opacity: 0;
+  animation: spin 7s linear infinite paused;
+  pointer-events: none;
+}
+.repo-card:hover::before { opacity: .7; animation-play-state: running; }
+
+/* Repo meta chips */
+.repo-card .meta span {
+  background: color-mix(in oklab, var(--card) 86%, transparent);
+  border: 1px solid var(--card-border);
+  border-radius: 999px;
+  padding: 3px 8px;
+  font-size: 12px;
+}
+
+/* Link underline flourish */
+.repo-card a {
+  position: relative;
+  text-decoration: none;
+}
+.repo-card a::after {
+  content: "";
+  position: absolute; left: 0; right: 0; bottom: -2px;
+  height: 2px; border-radius: 2px;
+  background: linear-gradient(90deg, var(--brand), var(--brand-2));
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 220ms ease;
+}
+.repo-card a:hover::after { transform: scaleX(1); }
 
 /* Filter grid */
 .filter-grid {
@@ -34,12 +87,8 @@
   border-radius: 12px;
   background: var(--card-grad);
 }
-@media (max-width: 920px) {
-  .filter-grid { grid-template-columns: 1fr 1fr; }
-}
-@media (max-width: 560px) {
-  .filter-grid { grid-template-columns: 1fr; }
-}
+@media (max-width: 920px) { .filter-grid { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 560px) { .filter-grid { grid-template-columns: 1fr; } }
 .filter-grid label {
   display: block;
   font-size: 12px;
@@ -120,38 +169,61 @@
   box-shadow: 0 0 0 6px color-mix(in oklab, #22c55e 16%, transparent);
 }
 
-/* AI Summary: card and title */
+/* AI Summary: unique animated panel */
 .ai-summary {
   position: relative;
   overflow: hidden;
   border-radius: 14px;
-  border: 1px solid var(--card-border);
-  background: linear-gradient(180deg,
-    color-mix(in oklab, var(--card) 96%, transparent) 0%,
-    color-mix(in oklab, var(--card) 86%, transparent) 100%);
+  border: 1px solid transparent;
+  background:
+    linear-gradient(180deg, color-mix(in oklab, var(--card) 96%, transparent) 0%, color-mix(in oklab, var(--card) 86%, transparent) 100%) padding-box,
+    conic-gradient(from 90deg at 50% 50%, var(--glow-a), var(--glow-b), var(--glow-a)) border-box;
 }
 .ai-summary::before {
   content: "";
-  position: absolute; inset: -1px;
-  border-radius: inherit;
-  background: linear-gradient(135deg, color-mix(in oklab, var(--brand) 30%, transparent), color-mix(in oklab, var(--brand-2) 30%, transparent));
-  filter: blur(14px);
-  opacity: .18;
-  z-index: 0;
+  position: absolute; inset: -20%;
+  background:
+    radial-gradient(120% 80% at -10% -10%, color-mix(in oklab, var(--brand) 18%, transparent), transparent 60%),
+    radial-gradient(100% 60% at 110% -10%, color-mix(in oklab, var(--brand-2) 18%, transparent), transparent 60%),
+    repeating-radial-gradient(circle at 50% 40%, color-mix(in oklab, var(--fg) 5%, transparent) 0 1px, transparent 1px 3px);
+  filter: blur(10px);
+  opacity: .22;
   pointer-events: none;
 }
+.ai-summary::after {
+  content: "";
+  position: absolute; inset: -40%;
+  background: linear-gradient(120deg, transparent 30%, color-mix(in oklab, var(--brand) 20%, transparent) 45%, transparent 60%);
+  transform: translateX(-20%) rotate(8deg);
+  animation: sheen 8s ease-in-out infinite;
+  pointer-events: none;
+  opacity: .35;
+}
 .ai-summary > * { position: relative; z-index: 1; }
-.ai-summary h3 {
+
+/* AI title and chip */
+.ai-title {
   margin-top: 0;
+  display: flex; align-items: center; gap: 10px;
   background: linear-gradient(135deg, var(--brand), var(--brand-2));
   -webkit-background-clip: text; background-clip: text; color: transparent;
 }
+.ai-chip {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 28px; height: 28px; border-radius: 8px;
+  font-weight: 700; font-size: 12px; letter-spacing: .6px;
+  color: white;
+  background: linear-gradient(135deg, var(--brand), var(--brand-2));
+  box-shadow: 0 6px 18px color-mix(in oklab, var(--brand) 30%, transparent);
+}
 
-/* Scrollable summary body */
+/* Scrollable summary body with fade edges */
 .ai-body {
   max-height: 360px;
   overflow: auto;
   padding-right: 6px;
+  -webkit-mask-image: linear-gradient(180deg, rgba(0,0,0,.9), #000 24px, #000 calc(100% - 24px), rgba(0,0,0,.9));
+  mask-image: linear-gradient(180deg, rgba(0,0,0,.9), #000 24px, #000 calc(100% - 24px), rgba(0,0,0,.9));
 }
 .ai-body::-webkit-scrollbar { width: 10px; }
 .ai-body::-webkit-scrollbar-thumb {
@@ -163,7 +235,7 @@
   border-radius: 8px;
 }
 
-/* Animated stream effect */
+/* Animated stream effect with paragraph markers */
 .ai-stream {
   white-space: pre-wrap;
   line-height: 1.6;
@@ -184,6 +256,20 @@
 .ai-stream[data-animated="true"] p:nth-child(6)  { animation-delay: calc(var(--delay-step) * 6); }
 .ai-stream[data-animated="true"] p:nth-child(7)  { animation-delay: calc(var(--delay-step) * 7); }
 .ai-stream[data-animated="true"] p:nth-child(8)  { animation-delay: calc(var(--delay-step) * 8); }
+
+/* Decorative bullet and accent line for paragraphs */
+.ai-stream p {
+  position: relative;
+  margin: 0 0 10px;
+  padding-left: 14px;
+}
+.ai-stream p::before {
+  content: "";
+  position: absolute; left: 0; top: .8em;
+  width: 6px; height: 6px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--brand), var(--brand-2));
+  box-shadow: 0 0 0 6px color-mix(in oklab, var(--brand) 12%, transparent);
+}
 
 /* Hide the blinking caret in the final summary (we animate paragraphs instead) */
 .ai-caret { display: none; }
@@ -219,6 +305,15 @@
   from { opacity: 0; transform: translateY(4px) }
   to   { opacity: 1; transform: translateY(0) }
 }
+@keyframes spin {
+  to { --angle: 360deg; }
+}
+@keyframes sheen {
+  0%   { transform: translateX(-30%) rotate(8deg); opacity: .0; }
+  20%  { transform: translateX(0%) rotate(8deg);  opacity: .35; }
+  50%  { transform: translateX(30%) rotate(8deg); opacity: .15; }
+  100% { transform: translateX(60%) rotate(8deg); opacity: .0; }
+}
 
 /* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
@@ -228,6 +323,6 @@
     opacity: 1 !important;
     transform: none !important;
   }
-  .card, .btn {
-    transition: none !important;
-  } 
+  .card, .btn { transition: none !important; }
+  .repo-card::before, .ai-summary::after { animation: none !important; opacity: .12 !important; }
+}

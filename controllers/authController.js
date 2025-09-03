@@ -1,6 +1,7 @@
 const axios = require("axios");
 const { setToken } = require("../config/githubClient");
 const tokenStore = require("../utils/tokenStore");
+const { getClient } = require("../config/githubClient");
 
 exports.login = (req, res) => {
   const redirectUri =
@@ -42,5 +43,26 @@ exports.callback = async (req, res) => {
   } catch (e) {
     const target = process.env.FRONTEND_URL || "http://localhost:5173";
     res.redirect(`${target}?auth=error`);
+  }
+};
+
+exports.me = async (req, res) => {
+  try {
+    // If token storage is used, optionally check it
+    if (typeof tokenStore.getToken === "function" && !tokenStore.getToken()) {
+      return res.status(401).json({ error: "Not authenticated" });
+    }
+
+    const client = getClient();
+    const { data } = await client.users.getAuthenticated();
+    return res.json({
+      login: data.login,
+      name: data.name,
+      avatar_url: data.avatar_url,
+      id: data.id,
+    });
+  } catch (e) {
+    const status = e?.status === 401 ? 401 : 500;
+    return res.status(status).json({ error: e?.message || "Failed to fetch user" });
   }
 };

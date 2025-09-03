@@ -17,7 +17,6 @@ export default function NavBar({
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
-  // Theme boot + persist
   useEffect(() => {
     const saved =
       (localStorage.getItem("theme") as "light" | "dark" | null) ||
@@ -29,7 +28,6 @@ export default function NavBar({
     localStorage.setItem("theme", theme);
   }, [theme]);
 
-  // Scroll shadow
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
     onScroll();
@@ -84,9 +82,7 @@ export default function NavBar({
             </span>
           ) : connectUrl ? (
             <a className="btn primary" href={connectUrl}>
-              <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
-                <GitHubMark size={18} /> Connect with GitHub
-              </span>
+              Connect with GitHub
             </a>
           ) : null}
         </div>

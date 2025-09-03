@@ -245,7 +245,7 @@ export default function Home() {
         {includeSummary && !data?.summary && loading && (
           <section style={{ marginTop: 16 }}>
             <div className="card ai-summary" style={{ padding: 16 }}>
-              <h3 style={{ marginTop: 0 }}>AI Summary</h3>
+              <h3 className="ai-title"><span className="ai-chip">AI</span> AI Summary</h3>
               <div className="skeleton-lines">
                 <div className="skeleton-line lg" />
                 <div className="skeleton-line" />
@@ -259,7 +259,7 @@ export default function Home() {
         {data?.summary && (
           <section style={{ marginTop: 16 }}>
             <div className="card ai-summary" style={{ padding: 16 }}>
-              <h3 style={{ marginTop: 0 }}>AI Summary</h3>
+              <h3 className="ai-title"><span className="ai-chip">AI</span> AI Summary</h3>
               <div className="ai-body">
                 <div className="ai-stream" data-animated="true">
                   {data.summary
@@ -278,7 +278,7 @@ export default function Home() {
         <section style={{ marginTop: 16 }}>
           <div style={{ display: "grid", gap: 10 }}>
             {data?.items?.map((r) => (
-              <article key={r.id} className="card hover" style={{ padding: 14 }}>
+              <article key={r.id} className="card hover repo-card" style={{ padding: 14 }}>
                 <div style={{ display: "flex", alignItems: "baseline", gap: 10 }}>
                   <a href={r.html_url} target="_blank" rel="noreferrer" style={{ fontWeight: 700, color: "var(--fg)", textDecoration: "none" }}>
                     {r.full_name}
@@ -297,7 +297,7 @@ export default function Home() {
                 {r.description && (
                   <p style={{ margin: "6px 0 8px", color: "var(--muted)" }}>{r.description}</p>
                 )}
-                <div style={{ display: "flex", flexWrap: "wrap", gap: 10, color: "var(--muted)", fontSize: 13 }}>
+                <div className="meta" style={{ display: "flex", flexWrap: "wrap", gap: 10, color: "var(--muted)", fontSize: 13 }}>
                   {r.language && <span>🧠 {r.language}</span>}
                   <span>★ {r.stargazers_count}</span>
                   <span>⑂ {r.forks_count}</span>
