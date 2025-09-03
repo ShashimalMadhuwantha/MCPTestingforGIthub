@@ -1,0 +1,154 @@
+:root {
+  --ring: color-mix(in oklab, var(--brand) 60%, transparent);
+  --ring-2: color-mix(in oklab, var(--brand-2) 60%, transparent);
+  --card-grad: linear-gradient(180deg, color-mix(in oklab, var(--card) 94%, transparent), transparent);
+  --card-border: color-mix(in oklab, var(--border) 80%, transparent);
+  --glow-a: color-mix(in oklab, var(--brand) 22%, transparent);
+  --glow-b: color-mix(in oklab, var(--brand-2) 22%, transparent);
+}
+
+/* Card */
+.card {
+  position: relative;
+  background: linear-gradient(var(--card), var(--card)) padding-box,
+              radial-gradient(140% 120% at 0% 0%, color-mix(in oklab, var(--brand) 10%, transparent), transparent 60%) border-box;
+  border: 1px solid transparent;
+  border-radius: 14px;
+  box-shadow: 0 8px 24px color-mix(in oklab, var(--shadow, rgba(0,0,0,0.2)) 26%, transparent);
+  backdrop-filter: saturate(1.02) blur(2px);
+  transition: transform 160ms ease, box-shadow 220ms ease, border-color 160ms ease, background 220ms ease;
+}
+.card.hover:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 14px 32px color-mix(in oklab, var(--shadow, rgba(0,0,0,0.2)) 40%, transparent),
+    0 0 0 1px color-mix(in oklab, var(--brand) 18%, transparent) inset;
+}
+
+/* Commit card accent */
+.commit-card {
+  background:
+    linear-gradient(var(--card), var(--card)) padding-box,
+    conic-gradient(from 180deg at 50% 50%, color-mix(in oklab, var(--brand) 12%, transparent), color-mix(in oklab, var(--brand-2) 12%, transparent), color-mix(in oklab, var(--brand) 12%, transparent)) border-box;
+  border: 1px solid transparent;
+}
+
+/* Filter grid (reuse look from home) */
+.filter-grid {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: 2fr 2fr 1.2fr 1.8fr;
+  align-items: end;
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--card-grad);
+}
+@media (max-width: 920px) { .filter-grid { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 560px) { .filter-grid { grid-template-columns: 1fr; } }
+.filter-grid label {
+  display: block;
+  font-size: 12px;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+.filter-grid input[type="text"],
+.filter-grid input[type="date"],
+.filter-grid select {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 10px;
+  color: var(--fg);
+  background: color-mix(in oklab, var(--card) 86%, transparent);
+  border: 1px solid var(--card-border);
+  outline: none;
+  transition: border-color 160ms ease, box-shadow 160ms ease, background 160ms ease;
+}
+.filter-grid input:focus,
+.filter-grid select:focus {
+  border-color: color-mix(in oklab, var(--brand) 50%, var(--border) 50%);
+  box-shadow:
+    0 0 0 2px color-mix(in oklab, var(--ring) 60%, transparent),
+    0 8px 18px color-mix(in oklab, var(--ring) 22%, transparent);
+  background: color-mix(in oklab, var(--card) 92%, transparent);
+}
+
+/* Buttons */
+.btn {
+  transition: transform 120ms ease, box-shadow 160ms ease, background 160ms ease, border-color 160ms ease;
+}
+.btn:hover { transform: translateY(-1px); }
+.btn.primary:hover { box-shadow: 0 10px 26px rgba(59,130,246,0.45); }
+
+/* AI summary look */
+.ai-summary {
+  position: relative;
+  overflow: hidden;
+  border-radius: 14px;
+  border: 1px solid transparent;
+  background:
+    linear-gradient(180deg, color-mix(in oklab, var(--card) 96%, transparent) 0%, color-mix(in oklab, var(--card) 86%, transparent) 100%) padding-box,
+    conic-gradient(from 90deg at 50% 50%, var(--glow-a), var(--glow-b), var(--glow-a)) border-box;
+}
+.ai-summary::before {
+  content: "";
+  position: absolute; inset: -20%;
+  background:
+    radial-gradient(120% 80% at -10% -10%, color-mix(in oklab, var(--brand) 18%, transparent), transparent 60%),
+    radial-gradient(100% 60% at 110% -10%, color-mix(in oklab, var(--brand-2) 18%, transparent), transparent 60%),
+    repeating-radial-gradient(circle at 50% 40%, color-mix(in oklab, var(--fg) 5%, transparent) 0 1px, transparent 1px 3px);
+  filter: blur(10px);
+  opacity: .22;
+  pointer-events: none;
+}
+.ai-title {
+  margin-top: 0;
+  display: flex; align-items: center; gap: 10px;
+  background: linear-gradient(135deg, var(--brand), var(--brand-2));
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+.ai-chip {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 28px; height: 28px; border-radius: 8px;
+  font-weight: 700; font-size: 12px; letter-spacing: .6px;
+  color: white;
+  background: linear-gradient(135deg, var(--brand), var(--brand-2));
+  box-shadow: 0 6px 18px color-mix(in oklab, var(--brand) 30%, transparent);
+}
+/* ...existing code... */
+
+/* Ensure long AI summaries are scrollable */
+.ai-body {
+  max-height: 360px;
+  overflow: auto;
+  padding-right: 6px; /* keep content visible next to scrollbar */
+  scrollbar-gutter: stable;
+}
+@media (max-height: 740px) {
+  .ai-body { max-height: 260px; }
+}
+.ai-stream { white-space: pre-wrap; line-height: 1.6; }
+
+/* Skeleton */
+.skeleton-lines { display: grid; gap: 8px; }
+.skeleton-line {
+  height: 12px; border-radius: 6px;
+  background:
+    linear-gradient(90deg,
+      color-mix(in oklab, var(--card) 82%, transparent) 25%,
+      color-mix(in oklab, var(--card) 92%, transparent) 37%,
+      color-mix(in oklab, var(--card) 82%, transparent) 63%);
+  background-size: 200% 100%;
+  animation: shimmer 1200ms ease infinite;
+}
+.skeleton-line.lg { height: 16px; }
+.skeleton-line.w-70 { width: 70%; }
+.skeleton-line.w-50 { width: 50%; }
+
+@keyframes shimmer {
+  0% { background-position: 180% 0; }
+  100% { background-position: -20% 0; }
+}
+
+/* Helpers */
+.muted { color: var(--muted); }

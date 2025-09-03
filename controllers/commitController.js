@@ -142,4 +142,45 @@ ${commitMessages}`;
     res.status(500).json({ error: err.message });
   }
 };
+
+// ...existing code...
+exports.listCommitsByDate = async (req, res) => {
+  try {
+    const { owner, repo, date } = req.params;
+
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) {
+      return res.status(400).json({ error: "Invalid date format. Use YYYY-MM-DD." });
+    }
+
+    const since = new Date(`${date}T00:00:00Z`);
+    const until = new Date(`${date}T23:59:59Z`);
+    if (isNaN(since) || isNaN(until)) {
+      return res.status(400).json({ error: "Invalid date." });
+    }
+
+    const client = getClient();
+    let allCommits = [];
+    let page = 1;
+
+    while (true) {
+      const { data } = await client.repos.listCommits({
+        owner,
+        repo,
+        since: since.toISOString(),
+        until: until.toISOString(),
+        per_page: 100,
+        page,
+      });
+      if (!data || data.length === 0) break;
+      allCommits = allCommits.concat(data);
+      if (data.length < 100) break;
+      page += 1;
+    }
+
+    return res.json(allCommits);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+// ...existing code...
 // ...existing code...
