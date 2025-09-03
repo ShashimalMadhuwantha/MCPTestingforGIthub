@@ -115,10 +115,17 @@
   background: linear-gradient(135deg, var(--brand), var(--brand-2));
   box-shadow: 0 6px 18px color-mix(in oklab, var(--brand) 30%, transparent);
 }
+/* ...existing code... */
+
+/* Ensure long AI summaries are scrollable */
 .ai-body {
   max-height: 360px;
   overflow: auto;
-  padding-right: 6px;
+  padding-right: 6px; /* keep content visible next to scrollbar */
+  scrollbar-gutter: stable;
+}
+@media (max-height: 740px) {
+  .ai-body { max-height: 260px; }
 }
 .ai-stream { white-space: pre-wrap; line-height: 1.6; }
 
