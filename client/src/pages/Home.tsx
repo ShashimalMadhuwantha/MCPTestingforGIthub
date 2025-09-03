@@ -277,35 +277,46 @@ export default function Home() {
         {/* List */}
         <section style={{ marginTop: 16 }}>
           <div style={{ display: "grid", gap: 10 }}>
-            {data?.items?.map((r) => (
-              <article key={r.id} className="card hover repo-card" style={{ padding: 14 }}>
-                <div style={{ display: "flex", alignItems: "baseline", gap: 10 }}>
-                  <a href={r.html_url} target="_blank" rel="noreferrer" style={{ fontWeight: 700, color: "var(--fg)", textDecoration: "none" }}>
-                    {r.full_name}
-                  </a>
-                  {r.private && (
-                    <span style={{ fontSize: 12, color: "var(--muted)", border: "1px solid var(--border)", padding: "2px 6px", borderRadius: 6 }}>
-                      private
-                    </span>
+            {data?.items?.map((r: any) => {
+              const ownerLogin = r?.owner?.login || "";
+              const ownerAvatar = r?.owner?.avatar_url || "";
+              return (
+                <article key={r.id} className="card hover repo-card" style={{ padding: 14 }}>
+                  <div className="repo-top">
+                    <a
+                      href={r.html_url}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="repo-title"
+                    >
+                      {r.full_name}
+                    </a>
+                    <div className="chips">
+                      {ownerLogin && (
+                        <span className="chip chip--owner" title={`Owner: ${ownerLogin}`}>
+                          {ownerAvatar ? <img className="avatar" src={ownerAvatar} alt="" /> : null}
+                          {ownerLogin}
+                        </span>
+                      )}
+                      {r.private && <span className="chip chip--badge">private</span>}
+                      {r.archived && <span className="chip chip--badge chip--badge-warn">archived</span>}
+                    </div>
+                  </div>
+
+                  {r.description && (
+                    <p style={{ margin: "6px 0 8px", color: "var(--muted)" }}>{r.description}</p>
                   )}
-                  {r.archived && (
-                    <span style={{ fontSize: 12, color: "var(--muted)", border: "1px solid var(--border)", padding: "2px 6px", borderRadius: 6 }}>
-                      archived
-                    </span>
-                  )}
-                </div>
-                {r.description && (
-                  <p style={{ margin: "6px 0 8px", color: "var(--muted)" }}>{r.description}</p>
-                )}
-                <div className="meta" style={{ display: "flex", flexWrap: "wrap", gap: 10, color: "var(--muted)", fontSize: 13 }}>
-                  {r.language && <span>🧠 {r.language}</span>}
-                  <span>★ {r.stargazers_count}</span>
-                  <span>⑂ {r.forks_count}</span>
-                  <span>● issues {r.open_issues_count}</span>
-                  <span>⏱ pushed {new Date(r.pushed_at).toLocaleString()}</span>
-                </div>
-              </article>
-            ))}
+
+                  <div className="repo-meta chips">
+                    {r.language && <span className="chip chip--lang">🧠 {r.language}</span>}
+                    <span className="chip chip--stars">★ {r.stargazers_count}</span>
+                    <span className="chip chip--forks">⑂ {r.forks_count}</span>
+                    <span className="chip chip--issues">● {r.open_issues_count} issues</span>
+                    <span className="chip chip--pushed">⏱ {new Date(r.pushed_at).toLocaleString()}</span>
+                  </div>
+                </article>
+              );
+            })}
             {!loading && data && data.items.length === 0 && (
               <div className="card">No repositories match the filters.</div>
             )}

@@ -310,35 +310,32 @@ export default function Commits() {
           <div style={{ display: "grid", gap: 10 }}>
             {commits?.map((c) => {
               const author = c.author?.login || c.commit?.author?.name || "unknown";
+              const avatar = c.author?.avatar_url || "";
               const when = c.commit?.author?.date
                 ? new Date(c.commit.author.date).toLocaleString()
                 : "";
               return (
                 <article key={c.sha} className="card hover commit-card" style={{ padding: 14 }}>
-                  <div style={{ display: "flex", alignItems: "baseline", gap: 10 }}>
+                  <div className="commit-top">
                     <a
                       href={c.html_url}
                       target="_blank"
                       rel="noreferrer"
-                      style={{ fontWeight: 700, color: "var(--fg)", textDecoration: "none" }}
+                      className="commit-title"
                     >
                       {firstLine(c.commit?.message || "")}
                     </a>
-                    <span className="muted">({shortSha(c.sha)})</span>
+                    <div className="chips">
+                      <span className="chip chip--sha">{shortSha(c.sha)}</span>
+                    </div>
                   </div>
-                  <div
-                    className="meta"
-                    style={{
-                      display: "flex",
-                      flexWrap: "wrap",
-                      gap: 10,
-                      color: "var(--muted)",
-                      fontSize: 13,
-                      marginTop: 6,
-                    }}
-                  >
-                    <span>👤 {author}</span>
-                    {when && <span>⏱ {when}</span>}
+
+                  <div className="commit-meta">
+                    <span className="chip chip--author">
+                      {avatar ? <img className="avatar" src={avatar} alt="" /> : null}
+                      {author}
+                    </span>
+                    {when && <span className="chip chip--date">{when}</span>}
                   </div>
                 </article>
               );

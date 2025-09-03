@@ -25,12 +25,143 @@
     0 0 0 1px color-mix(in oklab, var(--brand) 18%, transparent) inset;
 }
 
-/* Issue card accent */
+/* Issue card accent and subtle glow */
 .issue-card {
+  position: relative;
+  overflow: hidden;
   background:
     linear-gradient(var(--card), var(--card)) padding-box,
     conic-gradient(from 180deg at 50% 50%, color-mix(in oklab, var(--brand) 12%, transparent), color-mix(in oklab, var(--brand-2) 12%, transparent), color-mix(in oklab, var(--brand) 12%, transparent)) border-box;
   border: 1px solid transparent;
+}
+.issue-card::before {
+  content: "";
+  position: absolute; inset: -20%;
+  background:
+    radial-gradient(100% 60% at 0% 0%, color-mix(in oklab, var(--brand) 12%, transparent), transparent 60%),
+    radial-gradient(60% 40% at 100% 0%, color-mix(in oklab, var(--brand-2) 12%, transparent), transparent 60%);
+  opacity: .18;
+  filter: blur(12px);
+  pointer-events: none;
+  transition: opacity 200ms ease;
+}
+.issue-card:hover::before { opacity: .32; }
+
+/* Issue header */
+.issue-top {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: baseline;
+  justify-content: space-between;
+}
+.issue-title {
+  font-weight: 700;
+  color: var(--fg);
+  text-decoration: none;
+  position: relative;
+}
+.issue-title::after {
+  content: "";
+  position: absolute; left: 0; right: 0; bottom: -2px;
+  height: 2px; border-radius: 2px;
+  background: linear-gradient(90deg, var(--brand), var(--brand-2));
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 220ms ease;
+}
+.issue-title:hover::after { transform: scaleX(1); }
+
+.issue-desc {
+  margin: 6px 0 8px;
+  color: var(--muted);
+}
+
+/* Chips system (shared) */
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+
+.chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  height: 26px; padding: 0 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  color: var(--fg);
+  border: 1px solid var(--card-border);
+  background: color-mix(in oklab, var(--card) 90%, transparent);
+  box-shadow: 0 2px 10px color-mix(in oklab, var(--shadow, rgba(0,0,0,0.2)) 14%, transparent);
+}
+.chip .avatar {
+  width: 18px; height: 18px; border-radius: 50%;
+  box-shadow: 0 0 0 1px color-mix(in oklab, var(--card-border) 80%, transparent);
+}
+
+/* Variants */
+.chip--author {
+  background: linear-gradient(180deg, color-mix(in oklab, var(--brand-2) 10%, var(--card) 92%), var(--card));
+  border-color: color-mix(in oklab, var(--brand-2) 30%, var(--card-border));
+  font-weight: 600;
+}
+.chip--state-open {
+  background: linear-gradient(180deg, color-mix(in oklab, #22c55e 16%, var(--card) 90%), var(--card));
+  border-color: color-mix(in oklab, #22c55e 44%, var(--card-border));
+  color: color-mix(in oklab, #22c55e 84%, var(--fg) 16%);
+}
+.chip--state-closed {
+  background: linear-gradient(180deg, color-mix(in oklab, #ef4444 16%, var(--card) 90%), var(--card));
+  border-color: color-mix(in oklab, #ef4444 44%, var(--card-border));
+  color: color-mix(in oklab, #ef4444 84%, var(--fg) 16%);
+}
+.chip--comments {
+  background: linear-gradient(180deg, color-mix(in oklab, #60a5fa 18%, var(--card) 90%), var(--card));
+  border-color: color-mix(in oklab, #60a5fa 42%, var(--card-border));
+}
+.chip--date {
+  background: linear-gradient(180deg, color-mix(in oklab, var(--fg) 4%, var(--card) 96%), var(--card));
+  border-color: color-mix(in oklab, var(--fg) 12%, var(--card-border));
+  color: color-mix(in oklab, var(--fg) 80%, var(--muted) 20%);
+}
+.chip--badge {
+  background: linear-gradient(180deg, color-mix(in oklab, var(--fg) 4%, var(--card) 96%), var(--card));
+  border-color: color-mix(in oklab, var(--fg) 16%, var(--card-border));
+  color: color-mix(in oklab, var(--fg) 86%, var(--muted) 14%);
+}
+
+/* Label chips */
+.chip--label {
+  background: linear-gradient(180deg, color-mix(in oklab, var(--brand) 8%, var(--card) 94%), var(--card));
+  border-color: color-mix(in oklab, var(--brand) 24%, var(--card-border));
+}
+.chip--label-bug {
+  background: linear-gradient(180deg, color-mix(in oklab, #ef4444 16%, var(--card) 90%), var(--card));
+  border-color: color-mix(in oklab, #ef4444 42%, var(--card-border));
+}
+.chip--label-enhancement {
+  background: linear-gradient(180deg, color-mix(in oklab, #22c55e 16%, var(--card) 90%), var(--card));
+  border-color: color-mix(in oklab, #22c55e 42%, var(--card-border));
+}
+.chip--label-docs {
+  background: linear-gradient(180deg, color-mix(in oklab, #a78bfa 18%, var(--card) 90%), var(--card));
+  border-color: color-mix(in oklab, #a78bfa 42%, var(--card-border));
+}
+.chip--label-test {
+  background: linear-gradient(180deg, color-mix(in oklab, #22d3ee 18%, var(--card) 90%), var(--card));
+  border-color: color-mix(in oklab, #22d3ee 42%, var(--card-border));
+}
+.chip--label-chore {
+  background: linear-gradient(180deg, color-mix(in oklab, #f59e0b 18%, var(--card) 90%), var(--card));
+  border-color: color-mix(in oklab, #f59e0b 42%, var(--card-border));
+}
+.chip--label-security {
+  background: linear-gradient(180deg, color-mix(in oklab, #f43f5e 18%, var(--card) 90%), var(--card));
+  border-color: color-mix(in oklab, #f43f5e 42%, var(--card-border));
+}
+.chip--label-help {
+  background: linear-gradient(180deg, color-mix(in oklab, #60a5fa 18%, var(--card) 90%), var(--card));
+  border-color: color-mix(in oklab, #60a5fa 42%, var(--card-border));
+}
+.chip--label-design {
+  background: linear-gradient(180deg, color-mix(in oklab, #fb7185 18%, var(--card) 90%), var(--card));
+  border-color: color-mix(in oklab, #fb7185 42%, var(--card-border));
 }
 
 /* Filter grid */
@@ -146,5 +277,310 @@
   100% { background-position: -20% 0; }
 }
 
+/* Owner-scope section polish */
+.repo-issues-top {
+  display: flex; align-items: center; gap: 10px; justify-content: space-between;
+}
+.repo-issues-title {
+  font-weight: 700;
+  color: var(--fg);
+}
+.repo-issues-list { list-style: none; margin: 8px 0 0; padding-left: 0; display: grid; gap: 8px; }
+.repo-issues-link { color: var(--fg); text-decoration: none; }
+.repo-issues-link:hover { text-decoration: underline; }
+
 /* Helpers */
 .muted { color: var(--muted); }
+```// filepath: c:\project\github-mcp\client\src\styles\issues.css
+:root {
+  --ring: color-mix(in oklab, var(--brand) 60%, transparent);
+  --ring-2: color-mix(in oklab, var(--brand-2) 60%, transparent);
+  --card-grad: linear-gradient(180deg, color-mix(in oklab, var(--card) 94%, transparent), transparent);
+  --card-border: color-mix(in oklab, var(--border) 80%, transparent);
+  --glow-a: color-mix(in oklab, var(--brand) 22%, transparent);
+  --glow-b: color-mix(in oklab, var(--brand-2) 22%, transparent);
+}
+
+/* Card */
+.card {
+  position: relative;
+  background: linear-gradient(var(--card), var(--card)) padding-box,
+              radial-gradient(140% 120% at 0% 0%, color-mix(in oklab, var(--brand) 10%, transparent), transparent 60%) border-box;
+  border: 1px solid transparent;
+  border-radius: 14px;
+  box-shadow: 0 8px 24px color-mix(in oklab, var(--shadow, rgba(0,0,0,0.2)) 26%, transparent);
+  backdrop-filter: saturate(1.02) blur(2px);
+  transition: transform 160ms ease, box-shadow 220ms ease, border-color 160ms ease, background 220ms ease;
+}
+.card.hover:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 14px 32px color-mix(in oklab, var(--shadow, rgba(0,0,0,0.2)) 40%, transparent),
+    0 0 0 1px color-mix(in oklab, var(--brand) 18%, transparent) inset;
+}
+
+/* Issue card accent and subtle glow */
+.issue-card {
+  position: relative;
+  overflow: hidden;
+  background:
+    linear-gradient(var(--card), var(--card)) padding-box,
+    conic-gradient(from 180deg at 50% 50%, color-mix(in oklab, var(--brand) 12%, transparent), color-mix(in oklab, var(--brand-2) 12%, transparent), color-mix(in oklab, var(--brand) 12%, transparent)) border-box;
+  border: 1px solid transparent;
+}
+.issue-card::before {
+  content: "";
+  position: absolute; inset: -20%;
+  background:
+    radial-gradient(100% 60% at 0% 0%, color-mix(in oklab, var(--brand) 12%, transparent), transparent 60%),
+    radial-gradient(60% 40% at 100% 0%, color-mix(in oklab, var(--brand-2) 12%, transparent), transparent 60%);
+  opacity: .18;
+  filter: blur(12px);
+  pointer-events: none;
+  transition: opacity 200ms ease;
+}
+.issue-card:hover::before { opacity: .32; }
+
+/* Issue header */
+.issue-top {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: baseline;
+  justify-content: space-between;
+}
+.issue-title {
+  font-weight: 700;
+  color: var(--fg);
+  text-decoration: none;
+  position: relative;
+}
+.issue-title::after {
+  content: "";
+  position: absolute; left: 0; right: 0; bottom: -2px;
+  height: 2px; border-radius: 2px;
+  background: linear-gradient(90deg, var(--brand), var(--brand-2));
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 220ms ease;
+}
+.issue-title:hover::after { transform: scaleX(1); }
+
+.issue-desc {
+  margin: 6px 0 8px;
+  color: var(--muted);
+}
+
+/* Chips system (shared) */
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+
+.chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  height: 26px; padding: 0 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  color: var(--fg);
+  border: 1px solid var(--card-border);
+  background: color-mix(in oklab, var(--card) 90%, transparent);
+  box-shadow: 0 2px 10px color-mix(in oklab, var(--shadow, rgba(0,0,0,0.2)) 14%, transparent);
+}
+.chip .avatar {
+  width: 18px; height: 18px; border-radius: 50%;
+  box-shadow: 0 0 0 1px color-mix(in oklab, var(--card-border) 80%, transparent);
+}
+
+/* Variants */
+.chip--author {
+  background: linear-gradient(180deg, color-mix(in oklab, var(--brand-2) 10%, var(--card) 92%), var(--card));
+  border-color: color-mix(in oklab, var(--brand-2) 30%, var(--card-border));
+  font-weight: 600;
+}
+.chip--state-open {
+  background: linear-gradient(180deg, color-mix(in oklab, #22c55e 16%, var(--card) 90%), var(--card));
+  border-color: color-mix(in oklab, #22c55e 44%, var(--card-border));
+  color: color-mix(in oklab, #22c55e 84%, var(--fg) 16%);
+}
+.chip--state-closed {
+  background: linear-gradient(180deg, color-mix(in oklab, #ef4444 16%, var(--card) 90%), var(--card));
+  border-color: color-mix(in oklab, #ef4444 44%, var(--card-border));
+  color: color-mix(in oklab, #ef4444 84%, var(--fg) 16%);
+}
+.chip--comments {
+  background: linear-gradient(180deg, color-mix(in oklab, #60a5fa 18%, var(--card) 90%), var(--card));
+  border-color: color-mix(in oklab, #60a5fa 42%, var(--card-border));
+}
+.chip--date {
+  background: linear-gradient(180deg, color-mix(in oklab, var(--fg) 4%, var(--card) 96%), var(--card));
+  border-color: color-mix(in oklab, var(--fg) 12%, var(--card-border));
+  color: color-mix(in oklab, var(--fg) 80%, var(--muted) 20%);
+}
+.chip--badge {
+  background: linear-gradient(180deg, color-mix(in oklab, var(--fg) 4%, var(--card) 96%), var(--card));
+  border-color: color-mix(in oklab, var(--fg) 16%, var(--card-border));
+  color: color-mix(in oklab, var(--fg) 86%, var(--muted) 14%);
+}
+
+/* Label chips */
+.chip--label {
+  background: linear-gradient(180deg, color-mix(in oklab, var(--brand) 8%, var(--card) 94%), var(--card));
+  border-color: color-mix(in oklab, var(--brand) 24%, var(--card-border));
+}
+.chip--label-bug {
+  background: linear-gradient(180deg, color-mix(in oklab, #ef4444 16%, var(--card) 90%), var(--card));
+  border-color: color-mix(in oklab, #ef4444 42%, var(--card-border));
+}
+.chip--label-enhancement {
+  background: linear-gradient(180deg, color-mix(in oklab, #22c55e 16%, var(--card) 90%), var(--card));
+  border-color: color-mix(in oklab, #22c55e 42%, var(--card-border));
+}
+.chip--label-docs {
+  background: linear-gradient(180deg, color-mix(in oklab, #a78bfa 18%, var(--card) 90%), var(--card));
+  border-color: color-mix(in oklab, #a78bfa 42%, var(--card-border));
+}
+.chip--label-test {
+  background: linear-gradient(180deg, color-mix(in oklab, #22d3ee 18%, var(--card) 90%), var(--card));
+  border-color: color-mix(in oklab, #22d3ee 42%, var(--card-border));
+}
+.chip--label-chore {
+  background: linear-gradient(180deg, color-mix(in oklab, #f59e0b 18%, var(--card) 90%), var(--card));
+  border-color: color-mix(in oklab, #f59e0b 42%, var(--card-border));
+}
+.chip--label-security {
+  background: linear-gradient(180deg, color-mix(in oklab, #f43f5e 18%, var(--card) 90%), var(--card));
+  border-color: color-mix(in oklab, #f43f5e 42%, var(--card-border));
+}
+.chip--label-help {
+  background: linear-gradient(180deg, color-mix(in oklab, #60a5fa 18%, var(--card) 90%), var(--card));
+  border-color: color-mix(in oklab, #60a5fa 42%, var(--card-border));
+}
+.chip--label-design {
+  background: linear-gradient(180deg, color-mix(in oklab, #fb7185 18%, var(--card) 90%), var(--card));
+  border-color: color-mix(in oklab, #fb7185 42%, var(--card-border));
+}
+
+/* Filter grid */
+.filter-grid {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: 2fr 2fr 2fr;
+  align-items: end;
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--card-grad);
+}
+@media (max-width: 920px) { .filter-grid { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 560px) { .filter-grid { grid-template-columns: 1fr; } }
+.filter-grid label {
+  display: block;
+  font-size: 12px;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+.filter-grid input[type="text"],
+.filter-grid select {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 10px;
+  color: var(--fg);
+  background: color-mix(in oklab, var(--card) 86%, transparent);
+  border: 1px solid var(--card-border);
+  outline: none;
+  transition: border-color 160ms ease, box-shadow 160ms ease, background 160ms ease;
+}
+.filter-grid input:focus,
+.filter-grid select:focus {
+  border-color: color-mix(in oklab, var(--brand) 50%, var(--border) 50%);
+  box-shadow:
+    0 0 0 2px color-mix(in oklab, var(--ring) 60%, transparent),
+    0 8px 18px color-mix(in oklab, var(--ring) 22%, transparent);
+  background: color-mix(in oklab, var(--card) 92%, transparent);
+}
+
+/* Buttons */
+.btn { transition: transform 120ms ease, box-shadow 160ms ease, background 160ms ease, border-color 160ms ease; }
+.btn:hover { transform: translateY(-1px); }
+.btn.primary:hover { box-shadow: 0 10px 26px rgba(59,130,246,0.45); }
+
+/* AI summary */
+.ai-summary {
+  position: relative;
+  overflow: hidden;
+  border-radius: 14px;
+  border: 1px solid transparent;
+  background:
+    linear-gradient(180deg, color-mix(in oklab, var(--card) 96%, transparent) 0%, color-mix(in oklab, var(--card) 86%, transparent) 100%) padding-box,
+    conic-gradient(from 90deg at 50% 50%, var(--glow-a), var(--glow-b), var(--glow-a)) border-box;
+}
+.ai-summary::before {
+  content: "";
+  position: absolute; inset: -20%;
+  background:
+    radial-gradient(120% 80% at -10% -10%, color-mix(in oklab, var(--brand) 18%, transparent), transparent 60%),
+    radial-gradient(100% 60% at 110% -10%, color-mix(in oklab, var(--brand-2) 18%, transparent), transparent 60%),
+    repeating-radial-gradient(circle at 50% 40%, color-mix(in oklab, var(--fg) 5%, transparent) 0 1px, transparent 1px 3px);
+  filter: blur(10px);
+  opacity: .22;
+  pointer-events: none;
+}
+.ai-title {
+  margin-top: 0;
+  display: flex; align-items: center; gap: 10px;
+  background: linear-gradient(135deg, var(--brand), var(--brand-2));
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+.ai-chip {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 28px; height: 28px; border-radius: 8px;
+  font-weight: 700; font-size: 12px; letter-spacing: .6px;
+  color: white;
+  background: linear-gradient(135deg, var(--brand), var(--brand-2));
+  box-shadow: 0 6px 18px color-mix(in oklab, var(--brand) 30%, transparent);
+}
+
+/* Scrollable AI body */
+.ai-body {
+  max-height: 360px;
+  overflow: auto;
+  padding-right: 6px;
+  scrollbar-gutter: stable;
+}
+@media (max-height: 740px) {
+  .ai-body { max-height: 260px; }
+}
+.ai-stream { white-space: pre-wrap; line-height: 1.6; }
+
+/* Skeleton */
+.skeleton-lines { display: grid; gap: 8px; }
+.skeleton-line {
+  height: 12px; border-radius: 6px;
+  background:
+    linear-gradient(90deg,
+      color-mix(in oklab, var(--card) 82%, transparent) 25%,
+      color-mix(in oklab, var(--card) 92%, transparent) 37%,
+      color-mix(in oklab, var(--card) 82%, transparent) 63%);
+  background-size: 200% 100%;
+  animation: shimmer 1200ms ease infinite;
+}
+.skeleton-line.lg { height: 16px; }
+.skeleton-line.w-70 { width: 70%; }
+.skeleton-line.w-50 { width: 50%; }
+
+@keyframes shimmer {
+  0% { background-position: 180% 0; }
+  100% { background-position: -20% 0; }
+}
+
+/* Owner-scope section polish */
+.repo-issues-top {
+  display: flex; align-items: center; gap: 10px; justify-content: space-between;
+}
+.repo-issues-title {
+  font-weight: 700;
+  color: var(--fg);
+}
+.repo-issues-list { list-style: none; margin: 8px 0 0; padding-left: 0; display: grid; gap: 8px; }
+.repo-issues-link { color: var(--fg); text-decoration: none; }
+.repo-issues-link:hover { text-decoration: underline; }
+
+/*

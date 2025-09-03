@@ -1,12 +1,10 @@
-/* Home page enhancements — consistent with globals.css */
+/* Home page enhancements — consistent with globals and commits.css */
 
 :root {
   --ring: color-mix(in oklab, var(--brand) 60%, transparent);
   --ring-2: color-mix(in oklab, var(--brand-2) 60%, transparent);
   --card-grad: linear-gradient(180deg, color-mix(in oklab, var(--card) 94%, transparent), transparent);
   --card-border: color-mix(in oklab, var(--border) 80%, transparent);
-
-  /* Subtle glows */
   --glow-a: color-mix(in oklab, var(--brand) 22%, transparent);
   --glow-b: color-mix(in oklab, var(--brand-2) 22%, transparent);
 }
@@ -51,21 +49,21 @@
 }
 .repo-card:hover::before { opacity: .7; animation-play-state: running; }
 
-/* Repo meta chips */
-.repo-card .meta span {
-  background: color-mix(in oklab, var(--card) 86%, transparent);
-  border: 1px solid var(--card-border);
-  border-radius: 999px;
-  padding: 3px 8px;
-  font-size: 12px;
+/* Repo header (title + right-side chips) */
+.repo-top {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: baseline;
+  justify-content: space-between;
 }
-
-/* Link underline flourish */
-.repo-card a {
-  position: relative;
+.repo-title {
+  font-weight: 700;
+  color: var(--fg);
   text-decoration: none;
+  position: relative;
 }
-.repo-card a::after {
+.repo-title::after {
   content: "";
   position: absolute; left: 0; right: 0; bottom: -2px;
   height: 2px; border-radius: 2px;
@@ -74,7 +72,66 @@
   transform-origin: left;
   transition: transform 220ms ease;
 }
-.repo-card a:hover::after { transform: scaleX(1); }
+.repo-title:hover::after { transform: scaleX(1); }
+
+/* Chips system (mirrors commits.css) */
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+
+.chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  height: 26px; padding: 0 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  color: var(--fg);
+  border: 1px solid var(--card-border);
+  background: color-mix(in oklab, var(--card) 90%, transparent);
+  box-shadow: 0 2px 10px color-mix(in oklab, var(--shadow, rgba(0,0,0,0.2)) 14%, transparent);
+}
+.chip .avatar {
+  width: 18px; height: 18px; border-radius: 50%;
+  box-shadow: 0 0 0 1px color-mix(in oklab, var(--card-border) 80%, transparent);
+}
+
+/* Variants */
+.chip--owner {
+  background: linear-gradient(180deg, color-mix(in oklab, var(--brand) 10%, var(--card) 92%), var(--card));
+  border-color: color-mix(in oklab, var(--brand) 30%, var(--card-border));
+  font-weight: 600;
+}
+.chip--lang {
+  background: linear-gradient(180deg, color-mix(in oklab, var(--brand-2) 10%, var(--card) 92%), var(--card));
+  border-color: color-mix(in oklab, var(--brand-2) 30%, var(--card-border));
+}
+.chip--stars {
+  background: linear-gradient(180deg, color-mix(in oklab, #eab308 18%, var(--card) 90%), var(--card));
+  border-color: color-mix(in oklab, #eab308 40%, var(--card-border));
+}
+.chip--forks {
+  background: linear-gradient(180deg, color-mix(in oklab, #22d3ee 16%, var(--card) 90%), var(--card));
+  border-color: color-mix(in oklab, #22d3ee 40%, var(--card-border));
+}
+.chip--issues {
+  background: linear-gradient(180deg, color-mix(in oklab, #f472b6 16%, var(--card) 90%), var(--card));
+  border-color: color-mix(in oklab, #f472b6 38%, var(--card-border));
+}
+.chip--pushed {
+  background: linear-gradient(180deg, color-mix(in oklab, var(--fg) 4%, var(--card) 96%), var(--card));
+  border-color: color-mix(in oklab, var(--fg) 12%, var(--card-border));
+  color: color-mix(in oklab, var(--fg) 80%, var(--muted) 20%);
+}
+.chip--badge {
+  background: linear-gradient(180deg, color-mix(in oklab, var(--fg) 4%, var(--card) 96%), var(--card));
+  border-color: color-mix(in oklab, var(--fg) 16%, var(--card-border));
+  color: color-mix(in oklab, var(--fg) 86%, var(--muted) 14%);
+}
+.chip--badge-warn {
+  background: linear-gradient(180deg, color-mix(in oklab, #f97316 12%, var(--card) 94%), var(--card));
+  border-color: color-mix(in oklab, #f97316 36%, var(--card-border));
+  color: color-mix(in oklab, #f97316 70%, var(--fg) 30%);
+}
+
+/* Repo meta row uses chips */
+.repo-meta { margin-top: 8px; }
 
 /* Filter grid */
 .filter-grid {
@@ -169,7 +226,7 @@
   box-shadow: 0 0 0 6px color-mix(in oklab, #22c55e 16%, transparent);
 }
 
-/* AI Summary: unique animated panel */
+/* AI Summary */
 .ai-summary {
   position: relative;
   overflow: hidden;
@@ -201,7 +258,6 @@
 }
 .ai-summary > * { position: relative; z-index: 1; }
 
-/* AI title and chip */
 .ai-title {
   margin-top: 0;
   display: flex; align-items: center; gap: 10px;
@@ -217,8 +273,7 @@
   box-shadow: 0 6px 18px color-mix(in oklab, var(--brand) 30%, transparent);
 }
 
-/* Scrollable summary body with fade edges */
-/* Ensure long AI summaries are scrollable */
+/* Scrollable summary body */
 .ai-body {
   max-height: 360px;
   overflow: auto;
@@ -238,47 +293,9 @@
   border-radius: 8px;
 }
 
+.ai-stream { white-space: pre-wrap; line-height: 1.6; }
 
-/* Animated stream effect with paragraph markers */
-.ai-stream {
-  white-space: pre-wrap;
-  line-height: 1.6;
-  animation: fade-in 320ms ease both;
-}
-.ai-stream[data-animated="true"] { --delay-step: 24ms; }
-.ai-stream[data-animated="true"] p,
-.ai-stream[data-animated="true"] li {
-  opacity: 0;
-  transform: translateY(2px);
-  animation: rise-in 420ms ease forwards;
-}
-.ai-stream[data-animated="true"] p:nth-child(1)  { animation-delay: calc(var(--delay-step) * 1); }
-.ai-stream[data-animated="true"] p:nth-child(2)  { animation-delay: calc(var(--delay-step) * 2); }
-.ai-stream[data-animated="true"] p:nth-child(3)  { animation-delay: calc(var(--delay-step) * 3); }
-.ai-stream[data-animated="true"] p:nth-child(4)  { animation-delay: calc(var(--delay-step) * 4); }
-.ai-stream[data-animated="true"] p:nth-child(5)  { animation-delay: calc(var(--delay-step) * 5); }
-.ai-stream[data-animated="true"] p:nth-child(6)  { animation-delay: calc(var(--delay-step) * 6); }
-.ai-stream[data-animated="true"] p:nth-child(7)  { animation-delay: calc(var(--delay-step) * 7); }
-.ai-stream[data-animated="true"] p:nth-child(8)  { animation-delay: calc(var(--delay-step) * 8); }
-
-/* Decorative bullet and accent line for paragraphs */
-.ai-stream p {
-  position: relative;
-  margin: 0 0 10px;
-  padding-left: 14px;
-}
-.ai-stream p::before {
-  content: "";
-  position: absolute; left: 0; top: .8em;
-  width: 6px; height: 6px; border-radius: 50%;
-  background: linear-gradient(135deg, var(--brand), var(--brand-2));
-  box-shadow: 0 0 0 6px color-mix(in oklab, var(--brand) 12%, transparent);
-}
-
-/* Hide the blinking caret in the final summary (we animate paragraphs instead) */
-.ai-caret { display: none; }
-
-/* Skeleton while loading summary */
+/* Skeleton */
 .skeleton-lines { display: grid; gap: 8px; }
 .skeleton-line {
   height: 12px; border-radius: 6px;
@@ -302,12 +319,342 @@
   0% { background-position: 180% 0; }
   100% { background-position: -20% 0; }
 }
-@keyframes fade-in {
-  from { opacity: 0 } to { opacity: 1 }
+@keyframes spin {
+  to { --angle: 360deg; }
 }
-@keyframes rise-in {
-  from { opacity: 0; transform: translateY(4px) }
-  to   { opacity: 1; transform: translateY(0) }
+@keyframes sheen {
+  0%   { transform: translateX(-30%) rotate(8deg); opacity: .0; }
+  20%  { transform: translateX(0%) rotate(8deg);  opacity: .35; }
+  50%  { transform: translateX(30%) rotate(8deg); opacity: .15; }
+  100% { transform: translateX(60%) rotate(8deg); opacity: .0; }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .card, .btn { transition: none !important; }
+  .repo-card::before, .ai-summary::after { animation: none !important; opacity: .12 !important; }
+}
+```// filepath: c:\project\github-mcp\client\src\styles\home.css
+/* Home page enhancements — consistent with globals and commits.css */
+
+:root {
+  --ring: color-mix(in oklab, var(--brand) 60%, transparent);
+  --ring-2: color-mix(in oklab, var(--brand-2) 60%, transparent);
+  --card-grad: linear-gradient(180deg, color-mix(in oklab, var(--card) 94%, transparent), transparent);
+  --card-border: color-mix(in oklab, var(--border) 80%, transparent);
+  --glow-a: color-mix(in oklab, var(--brand) 22%, transparent);
+  --glow-b: color-mix(in oklab, var(--brand-2) 22%, transparent);
+}
+
+/* Card polish with gradient border and hover glow */
+.card {
+  position: relative;
+  background: linear-gradient(var(--card), var(--card)) padding-box,
+              radial-gradient(140% 120% at 0% 0%, color-mix(in oklab, var(--brand) 10%, transparent), transparent 60%) border-box;
+  border: 1px solid transparent;
+  border-radius: 14px;
+  box-shadow: 0 8px 24px color-mix(in oklab, var(--shadow, rgba(0,0,0,0.2)) 26%, transparent);
+  backdrop-filter: saturate(1.02) blur(2px);
+  transition: transform 160ms ease, box-shadow 220ms ease, border-color 160ms ease, background 220ms ease;
+}
+.card.hover:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 14px 32px color-mix(in oklab, var(--shadow, rgba(0,0,0,0.2)) 40%, transparent),
+    0 0 0 1px color-mix(in oklab, var(--brand) 18%, transparent) inset;
+}
+
+/* Animated border accent on repo cards */
+.repo-card {
+  background:
+    linear-gradient(var(--card), var(--card)) padding-box,
+    conic-gradient(from 180deg at 50% 50%, color-mix(in oklab, var(--brand) 14%, transparent), color-mix(in oklab, var(--brand-2) 14%, transparent), color-mix(in oklab, var(--brand) 14%, transparent)) border-box;
+  border: 1px solid transparent;
+}
+.repo-card::before {
+  content: "";
+  position: absolute; inset: -1px;
+  border-radius: inherit;
+  background: conic-gradient(from var(--angle, 0deg), var(--glow-a), var(--glow-b), var(--glow-a));
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  padding: 1px;
+  opacity: 0;
+  animation: spin 7s linear infinite paused;
+  pointer-events: none;
+}
+.repo-card:hover::before { opacity: .7; animation-play-state: running; }
+
+/* Repo header (title + right-side chips) */
+.repo-top {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: baseline;
+  justify-content: space-between;
+}
+.repo-title {
+  font-weight: 700;
+  color: var(--fg);
+  text-decoration: none;
+  position: relative;
+}
+.repo-title::after {
+  content: "";
+  position: absolute; left: 0; right: 0; bottom: -2px;
+  height: 2px; border-radius: 2px;
+  background: linear-gradient(90deg, var(--brand), var(--brand-2));
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 220ms ease;
+}
+.repo-title:hover::after { transform: scaleX(1); }
+
+/* Chips system (mirrors commits.css) */
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+
+.chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  height: 26px; padding: 0 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  color: var(--fg);
+  border: 1px solid var(--card-border);
+  background: color-mix(in oklab, var(--card) 90%, transparent);
+  box-shadow: 0 2px 10px color-mix(in oklab, var(--shadow, rgba(0,0,0,0.2)) 14%, transparent);
+}
+.chip .avatar {
+  width: 18px; height: 18px; border-radius: 50%;
+  box-shadow: 0 0 0 1px color-mix(in oklab, var(--card-border) 80%, transparent);
+}
+
+/* Variants */
+.chip--owner {
+  background: linear-gradient(180deg, color-mix(in oklab, var(--brand) 10%, var(--card) 92%), var(--card));
+  border-color: color-mix(in oklab, var(--brand) 30%, var(--card-border));
+  font-weight: 600;
+}
+.chip--lang {
+  background: linear-gradient(180deg, color-mix(in oklab, var(--brand-2) 10%, var(--card) 92%), var(--card));
+  border-color: color-mix(in oklab, var(--brand-2) 30%, var(--card-border));
+}
+.chip--stars {
+  background: linear-gradient(180deg, color-mix(in oklab, #eab308 18%, var(--card) 90%), var(--card));
+  border-color: color-mix(in oklab, #eab308 40%, var(--card-border));
+}
+.chip--forks {
+  background: linear-gradient(180deg, color-mix(in oklab, #22d3ee 16%, var(--card) 90%), var(--card));
+  border-color: color-mix(in oklab, #22d3ee 40%, var(--card-border));
+}
+.chip--issues {
+  background: linear-gradient(180deg, color-mix(in oklab, #f472b6 16%, var(--card) 90%), var(--card));
+  border-color: color-mix(in oklab, #f472b6 38%, var(--card-border));
+}
+.chip--pushed {
+  background: linear-gradient(180deg, color-mix(in oklab, var(--fg) 4%, var(--card) 96%), var(--card));
+  border-color: color-mix(in oklab, var(--fg) 12%, var(--card-border));
+  color: color-mix(in oklab, var(--fg) 80%, var(--muted) 20%);
+}
+.chip--badge {
+  background: linear-gradient(180deg, color-mix(in oklab, var(--fg) 4%, var(--card) 96%), var(--card));
+  border-color: color-mix(in oklab, var(--fg) 16%, var(--card-border));
+  color: color-mix(in oklab, var(--fg) 86%, var(--muted) 14%);
+}
+.chip--badge-warn {
+  background: linear-gradient(180deg, color-mix(in oklab, #f97316 12%, var(--card) 94%), var(--card));
+  border-color: color-mix(in oklab, #f97316 36%, var(--card-border));
+  color: color-mix(in oklab, #f97316 70%, var(--fg) 30%);
+}
+
+/* Repo meta row uses chips */
+.repo-meta { margin-top: 8px; }
+
+/* Filter grid */
+.filter-grid {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: 2fr 1.2fr 1fr 1fr 1fr 1fr;
+  align-items: end;
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--card-grad);
+}
+@media (max-width: 920px) { .filter-grid { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 560px) { .filter-grid { grid-template-columns: 1fr; } }
+.filter-grid label {
+  display: block;
+  font-size: 12px;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+
+/* Inputs and selects inside the filter area */
+.filter-grid input[type="text"],
+.filter-grid input[type="search"],
+.filter-grid input[type="number"],
+.filter-grid select {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 10px;
+  color: var(--fg);
+  background: color-mix(in oklab, var(--card) 86%, transparent);
+  border: 1px solid var(--card-border);
+  outline: none;
+  transition: border-color 160ms ease, box-shadow 160ms ease, background 160ms ease;
+}
+.filter-grid input::placeholder { color: color-mix(in oklab, var(--muted) 80%, transparent); }
+.filter-grid input:focus,
+.filter-grid select:focus,
+.filter-grid input[type="search"]:focus {
+  border-color: color-mix(in oklab, var(--brand) 50%, var(--border) 50%);
+  box-shadow:
+    0 0 0 2px color-mix(in oklab, var(--ring) 60%, transparent),
+    0 8px 18px color-mix(in oklab, var(--ring) 22%, transparent);
+  background: color-mix(in oklab, var(--card) 92%, transparent);
+}
+.filter-grid select {
+  appearance: none;
+  background-image:
+    linear-gradient(45deg, transparent 49%, var(--muted) 50%),
+    linear-gradient(135deg, var(--muted) 50%, transparent 51%);
+  background-position: calc(100% - 18px) 55%, calc(100% - 12px) 55%;
+  background-size: 6px 6px, 6px 6px;
+  background-repeat: no-repeat;
+  padding-right: 28px;
+}
+
+/* Buttons (light glow on hover) */
+.btn {
+  transition: transform 120ms ease, box-shadow 160ms ease, background 160ms ease, border-color 160ms ease;
+}
+.btn:hover { transform: translateY(-1px); }
+.btn.primary:hover { box-shadow: 0 10px 26px rgba(59,130,246,0.45); }
+.btn.ghost:hover { background: color-mix(in oklab, var(--card) 80%, transparent); }
+
+/* Muted helper */
+.muted { color: var(--muted); }
+
+/* Nav active state */
+.nav-links a.active {
+  background: color-mix(in oklab, var(--card) 80%, transparent);
+  color: var(--fg);
+  transform: translateY(-1px);
+}
+
+/* Status pill (connected) */
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: 999px;
+  font-size: 13px;
+  border: 1px solid var(--card-border);
+  background: color-mix(in oklab, var(--card) 90%, transparent);
+}
+.status-pill .dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--muted);
+}
+.status-pill.connected .dot {
+  background: #22c55e;
+  box-shadow: 0 0 0 6px color-mix(in oklab, #22c55e 16%, transparent);
+}
+
+/* AI Summary */
+.ai-summary {
+  position: relative;
+  overflow: hidden;
+  border-radius: 14px;
+  border: 1px solid transparent;
+  background:
+    linear-gradient(180deg, color-mix(in oklab, var(--card) 96%, transparent) 0%, color-mix(in oklab, var(--card) 86%, transparent) 100%) padding-box,
+    conic-gradient(from 90deg at 50% 50%, var(--glow-a), var(--glow-b), var(--glow-a)) border-box;
+}
+.ai-summary::before {
+  content: "";
+  position: absolute; inset: -20%;
+  background:
+    radial-gradient(120% 80% at -10% -10%, color-mix(in oklab, var(--brand) 18%, transparent), transparent 60%),
+    radial-gradient(100% 60% at 110% -10%, color-mix(in oklab, var(--brand-2) 18%, transparent), transparent 60%),
+    repeating-radial-gradient(circle at 50% 40%, color-mix(in oklab, var(--fg) 5%, transparent) 0 1px, transparent 1px 3px);
+  filter: blur(10px);
+  opacity: .22;
+  pointer-events: none;
+}
+.ai-summary::after {
+  content: "";
+  position: absolute; inset: -40%;
+  background: linear-gradient(120deg, transparent 30%, color-mix(in oklab, var(--brand) 20%, transparent) 45%, transparent 60%);
+  transform: translateX(-20%) rotate(8deg);
+  animation: sheen 8s ease-in-out infinite;
+  pointer-events: none;
+  opacity: .35;
+}
+.ai-summary > * { position: relative; z-index: 1; }
+
+.ai-title {
+  margin-top: 0;
+  display: flex; align-items: center; gap: 10px;
+  background: linear-gradient(135deg, var(--brand), var(--brand-2));
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+.ai-chip {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 28px; height: 28px; border-radius: 8px;
+  font-weight: 700; font-size: 12px; letter-spacing: .6px;
+  color: white;
+  background: linear-gradient(135deg, var(--brand), var(--brand-2));
+  box-shadow: 0 6px 18px color-mix(in oklab, var(--brand) 30%, transparent);
+}
+
+/* Scrollable summary body */
+.ai-body {
+  max-height: 360px;
+  overflow: auto;
+  padding-right: 6px;
+  scrollbar-gutter: stable;
+}
+@media (max-height: 740px) {
+  .ai-body { max-height: 260px; }
+}
+.ai-body::-webkit-scrollbar { width: 10px; }
+.ai-body::-webkit-scrollbar-thumb {
+  background: color-mix(in oklab, var(--border) 80%, var(--brand) 10%);
+  border-radius: 8px;
+}
+.ai-body::-webkit-scrollbar-track {
+  background: color-mix(in oklab, var(--card) 92%, transparent);
+  border-radius: 8px;
+}
+
+.ai-stream { white-space: pre-wrap; line-height: 1.6; }
+
+/* Skeleton */
+.skeleton-lines { display: grid; gap: 8px; }
+.skeleton-line {
+  height: 12px; border-radius: 6px;
+  background:
+    linear-gradient(90deg,
+      color-mix(in oklab, var(--card) 82%, transparent) 25%,
+      color-mix(in oklab, var(--card) 92%, transparent) 37%,
+      color-mix(in oklab, var(--card) 82%, transparent) 63%);
+  background-size: 200% 100%;
+  animation: shimmer 1200ms ease infinite;
+}
+.skeleton-line.lg { height: 16px; }
+.skeleton-line.w-70 { width: 70%; }
+.skeleton-line.w-50 { width: 50%; }
+
+/* Tiny paginator polish */
+.pager { display: flex; gap: 8px; align-items: center; }
+
+/* Animations */
+@keyframes shimmer {
+  0% { background-position: 180% 0; }
+  100% { background-position: -20% 0; }
 }
 @keyframes spin {
   to { --angle: 360deg; }
@@ -321,12 +668,5 @@
 
 /* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
-  .ai-stream[data-animated="true"] p,
-  .ai-stream[data-animated="true"] li {
-    animation: none !important;
-    opacity: 1 !important;
-    transform: none !important;
-  }
   .card, .btn { transition: none !important; }
-  .repo-card::before, .ai-summary::after { animation: none !important; opacity: .12 !important; }
-}
+  .repo-card::before, .ai-summary::after { animation: none !important; opacity:
