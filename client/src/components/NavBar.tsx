@@ -1,6 +1,27 @@
 import { useEffect, useState } from "react";
+import { Link, NavLink } from "react-router-dom";
 
 type ActiveKey = "repositories" | "issues" | "prs" | "commits";
+
+// Set initial theme class ASAP to avoid light flash on first paint
+(function ensureInitialThemeClass() {
+  try {
+    const saved = localStorage.getItem("theme");
+    const prefersDark =
+      saved ? saved === "dark" : window.matchMedia?.("(prefers-color-scheme: dark)").matches;
+    document.documentElement.classList.toggle("theme-dark", !!prefersDark);
+  } catch {}
+})();
+
+function getInitialTheme(): "light" | "dark" {
+  try {
+    if (document.documentElement.classList.contains("theme-dark")) return "dark";
+    const saved = localStorage.getItem("theme");
+    if (saved === "dark" || saved === "light") return saved;
+    if (window.matchMedia?.("(prefers-color-scheme: dark)").matches) return "dark";
+  } catch {}
+  return "light";
+}
 
 export default function NavBar({
   projectName,
@@ -13,16 +34,11 @@ export default function NavBar({
   showConnected?: boolean;
   connectUrl?: string;
 }) {
-  const [theme, setTheme] = useState<"light" | "dark">("light");
+  const [theme, setTheme] = useState<"light" | "dark">(() => getInitialTheme());
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
-  useEffect(() => {
-    const saved =
-      (localStorage.getItem("theme") as "light" | "dark" | null) ||
-      (window.matchMedia?.("(prefers-color-scheme: dark)").matches ? "dark" : "light");
-    setTheme(saved);
-  }, []);
+  // Apply theme class and persist on changes
   useEffect(() => {
     document.documentElement.classList.toggle("theme-dark", theme === "dark");
     localStorage.setItem("theme", theme);
@@ -40,28 +56,40 @@ export default function NavBar({
   return (
     <header className={`nav ${scrolled ? "scrolled" : ""}`}>
       <div className="container nav-inner">
-        <a className="brand" href="/home" aria-label="Home">
+        <Link className="brand" to="/home" aria-label="Home">
           <span className="brand-logo"><GitHubMark /></span>
           <span className="brand-name">{projectName}</span>
-        </a>
+        </Link>
 
         <nav
           className={`nav-links ${menuOpen ? "open" : ""}`}
           onClick={() => setMenuOpen(false)}
           aria-label="Primary"
         >
-          <a href="/home" className={active === "repositories" ? "active" : undefined} aria-current={active === "repositories" ? "page" : undefined}>
+          <NavLink
+            to="/home"
+            className={({ isActive }) => (isActive || active === "repositories" ? "active" : undefined)}
+          >
             Repositories
-          </a>
-          <a href="/issues" className={active === "issues" ? "active" : undefined}>
+          </NavLink>
+          <NavLink
+            to="/issues"
+            className={({ isActive }) => (isActive || active === "issues" ? "active" : undefined)}
+          >
             Issues
-          </a>
-          <a href="/prs" className={active === "prs" ? "active" : undefined}>
+          </NavLink>
+          <NavLink
+            to="/prs"
+            className={({ isActive }) => (isActive || active === "prs" ? "active" : undefined)}
+          >
             Pull Requests
-          </a>
-          <a href="/commits" className={active === "commits" ? "active" : undefined}>
+          </NavLink>
+          <NavLink
+            to="/commits"
+            className={({ isActive }) => (isActive || active === "commits" ? "active" : undefined)}
+          >
             Commits
-          </a>
+          </NavLink>
         </nav>
 
         <div className="nav-actions">
